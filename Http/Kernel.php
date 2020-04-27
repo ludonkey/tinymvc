@@ -100,6 +100,6 @@ class Kernel
 
     public static function getProjectDir(): string
     {
-        return dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+        return join(DIRECTORY_SEPARATOR, array(__DIR__, '..', '..', '..', '..')) . DIRECTORY_SEPARATOR;
     }
 }
