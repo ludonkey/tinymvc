@@ -12,7 +12,7 @@ trait Serializer
         foreach ($json as $key => $value) {
             $reflection = new ReflectionProperty(get_class($this), $key);
             $reflectionType = $reflection->getType();
-            if ($reflectionType->isBuiltin()) {
+            if (null == $reflectionType || $reflectionType->isBuiltin()) {
                 $this->{$key} = $value;
             } else {
                 $id = $value;
