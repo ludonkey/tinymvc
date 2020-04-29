@@ -2,6 +2,7 @@
 
 namespace ludk\Persistence;
 
+use Exception;
 use ReflectionClass;
 
 class JsonRepository implements ObjectRepository
@@ -15,10 +16,22 @@ class JsonRepository implements ObjectRepository
         $this->class = $class;
         $reflection = new ReflectionClass($class);
         $jsonFile = $resourcesDirPath . DIRECTORY_SEPARATOR . $reflection->getShortName() . '.json';
+        if (!file_exists($jsonFile)) {
+            throw new Exception("File doesn't exist: $jsonFile");
+        }
         $jsonStr = file_get_contents($jsonFile);
         $jsonArray = json_decode($jsonStr, true);
+        if (null == $jsonArray) {
+            throw new Exception("Problem with json: $jsonFile " . JsonRepository::GetLastJsonError());
+        }
         foreach ($jsonArray as $oneObjectJson) {
             $newObj = new $this->class();
+            if (null == $newObj) {
+                throw new Exception("Not able to instanciate " . $this->class);
+            }
+            if (!is_array($oneObjectJson)) {
+                throw new Exception("Problem with json: $jsonFile should be an array of " . $this->class);
+            }
             $newObj->loadFromJson($oneObjectJson);
             $this->objectsById[$newObj->id] = $newObj;
         }
@@ -31,7 +44,7 @@ class JsonRepository implements ObjectRepository
 
     public function find($id)
     {
-        if (array_key_exists($id, $this->objectsById))
+        if ((is_string($id) || is_int($id)) && array_key_exists($id, $this->objectsById))
             return $this->objectsById[$id];
         else
             return null;
@@ -91,6 +104,33 @@ class JsonRepository implements ObjectRepository
             }
         }
         return true;
+    }
+
+    private static function GetLastJsonError(): string
+    {
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                return ' - No errors';
+                break;
+            case JSON_ERROR_DEPTH:
+                return ' - Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                return ' - Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                return ' - Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                return ' - Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                return ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                return ' - Unknown error';
+                break;
+        }
     }
 }
 

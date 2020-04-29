@@ -13,7 +13,9 @@ class ManagerRegistry
 
     public static function reset(): void
     {
-        unset($_SESSION[self::SESSION_KEY]);
+        if (session_status() != PHP_SESSION_NONE) {
+            unset($_SESSION[self::SESSION_KEY]);
+        }
     }
 
     public static function setResourcesDirPath($resourcesDitPath)
