@@ -99,7 +99,11 @@ class JsonRepository implements ObjectRepository
     private static function isObjectValid($obj, $criteria)
     {
         foreach ($criteria as $fieldName => $value) {
-            if (preg_match('/' . $value . '/', $obj->$fieldName) == 0) {
+            $valToTest = $obj->$fieldName;
+            if (is_object($valToTest)) {
+                $valToTest = $valToTest->id;
+            }
+            if (preg_match('/' . $value . '/', $valToTest) == 0) {
                 return false;
             }
         }
