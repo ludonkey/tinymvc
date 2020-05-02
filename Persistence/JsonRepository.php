@@ -99,6 +99,9 @@ class JsonRepository implements ObjectRepository
     private static function isObjectValid($obj, $criteria)
     {
         foreach ($criteria as $fieldName => $value) {
+            if (!property_exists($obj, $fieldName)) {
+                return false;
+            }
             $valToTest = $obj->$fieldName;
             if (is_object($valToTest)) {
                 $valToTest = $valToTest->id;
