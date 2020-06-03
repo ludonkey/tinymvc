@@ -93,7 +93,7 @@ final class JsonEntityManager implements ObjectManager
         foreach ($oneObject as $pName => &$pValue) {
             $reflection = new ReflectionProperty($className, $pName);
             $reflectionType = $reflection->getType();
-            if (!$reflectionType->isBuiltin()) {
+            if (null != $reflectionType && !$reflectionType->isBuiltin()) {
                 $this->createOrUpdate($pValue);
             }
         }
@@ -106,7 +106,7 @@ final class JsonEntityManager implements ObjectManager
         foreach ($oneObject as $pName => &$pValue) {
             $reflection = new ReflectionProperty($className, $pName);
             $reflectionType = $reflection->getType();
-            if (!$reflectionType->isBuiltin()) {
+            if (null != $reflectionType && !$reflectionType->isBuiltin()) {
                 $this->createOrUpdate($pValue);
             }
         }
@@ -133,7 +133,7 @@ final class JsonEntityManager implements ObjectManager
             foreach ($oneObject as $pName => &$pValue) {
                 $reflection = new ReflectionProperty(get_class($className), $pName);
                 $reflectionType = $reflection->getType();
-                if (!$reflectionType->isBuiltin()) {
+                if (null != $reflectionType && !$reflectionType->isBuiltin()) {
                     $this->removeEntityIfExists($pValue, $cascade);
                 }
             }
