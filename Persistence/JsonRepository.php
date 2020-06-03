@@ -106,6 +106,9 @@ class JsonRepository implements ObjectRepository
             if (is_object($valToTest)) {
                 $valToTest = $valToTest->id;
             }
+            if (empty($value) && !empty($valToTest)) {
+                return false;
+            }
             if (preg_match('/' . $value . '/', $valToTest) == 0) {
                 return false;
             }
