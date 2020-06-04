@@ -2,6 +2,7 @@
 
 namespace ludk\Persistence;
 
+use ludk\Http\Session;
 use ludk\Persistence\ObjectManager;
 use ludk\Persistence\ObjectRepository;
 
@@ -13,8 +14,9 @@ class ManagerRegistry
 
     public static function reset(): void
     {
-        if (session_status() != PHP_SESSION_NONE) {
-            unset($_SESSION[self::SESSION_KEY]);
+        $session = new Session();
+        if ($session->isStarted()) {
+            $session->remove(self::SESSION_KEY);
         }
     }
 
@@ -25,10 +27,14 @@ class ManagerRegistry
 
     public static function getManager(): ObjectManager
     {
-        if (empty($_SESSION[self::SESSION_KEY])) {
-            $_SESSION[self::SESSION_KEY] = new JsonEntityManager(self::$RESOURCES_DIR_PATH);
+        $session = new Session();
+        if (!$session->isStarted()) {
+            $session->start();
         }
-        return $_SESSION[self::SESSION_KEY];
+        if (!$session->has(self::SESSION_KEY)) {
+            $session->set(self::SESSION_KEY, new JsonEntityManager(self::$RESOURCES_DIR_PATH));
+        }
+        return $session->get(self::SESSION_KEY);
     }
 
     public static function getRepository($classname): ObjectRepository

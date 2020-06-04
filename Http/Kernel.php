@@ -4,6 +4,7 @@ namespace ludk\Http;
 
 use ludk\Http\Route;
 use ludk\Http\Request;
+use ludk\Http\Session;
 use ludk\Http\Response;
 use Symfony\Component\Yaml\Yaml;
 
@@ -17,7 +18,9 @@ class Kernel
 
     public function __construct($routesFile = null)
     {
-        session_start();
+        $session = new Session();
+        $session->start();
+
         if (empty($routesFile)) {
             $routesFile = Kernel::getProjectDir() . 'config' . DIRECTORY_SEPARATOR . 'routes.yaml';
         }
