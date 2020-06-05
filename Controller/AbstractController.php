@@ -94,15 +94,26 @@ abstract class AbstractController
             $phpCodeFromView
         );
         // echo variable
-        $phpCodeFromView = preg_replace('/{{(\s*)([\w\->]*)(\s*)}}/', '<?= $$2 ?>', $phpCodeFromView, -1,
-$varReplacementCount);
-// echo url function
-$phpCodeFromView = preg_replace('/{{(\s*)url(.*)(\s*)}}/', '<?= $this->generateUrl$2 ?>', $phpCodeFromView);
-// echo function
-$phpCodeFromView = preg_replace('/{{(\s*)(.*)(\s*)}}/', '<?= $2 ?>', $phpCodeFromView);
+        $phpCodeFromView = preg_replace(
+            '/{{(\s*)([\w\->]*)(\s*)}}/',
+            '<?= $$2 ?>',
+            $phpCodeFromView,
+            -1,
+            $varReplacementCount
+        );
+        // echo url function
+        $phpCodeFromView = preg_replace('/{{(\s*)url(.*)(\s*)}}/', '<?= $this->generateUrl$2 ?>', $phpCodeFromView);
+        // echo function
+        $phpCodeFromView = preg_replace('/{{(\s*)(.*)(\s*)}}/', '<?= $2 ?>', $phpCodeFromView);
 
-eval('?>' . $phpCodeFromView . '<?php ');
-        return ob_get_clean();
+        eval('?>' . $phpCodeFromView . '<?php ');
+        $res =  ob_get_clean();
+        $pos = strpos($res, "AbstractController");
+        if ($pos === false) {
+            return $res;
+        } else {
+            die($res);
+        }
     }
 }
 
