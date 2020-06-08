@@ -106,14 +106,34 @@ class JsonRepository implements ObjectRepository
             if (is_object($valToTest)) {
                 $valToTest = $valToTest->id;
             }
+            $startSearchStr = '/\A';
+            $endSearchStr = '\z/';
+            if (JsonRepository::startsWith($value, '%')) {
+                $startSearchStr = '/';
+                $value = substr($value, 1);
+            }
+            if (JsonRepository::endsWith($value, '%')) {
+                $endSearchStr = '/';
+                $value = substr($value, 0, strlen($value) - 1);
+            }
             if (empty($value) && !empty($valToTest)) {
                 return false;
             }
-            if (preg_match('/' . $value . '/', $valToTest) == 0) {
+            if (preg_match($startSearchStr . $value . $endSearchStr, $valToTest) == 0) {
                 return false;
             }
         }
         return true;
+    }
+
+    private static function startsWith($haystack, $needle)
+    {
+        return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+    }
+
+    private static function endsWith($haystack, $needle)
+    {
+        return substr_compare($haystack, $needle, -strlen($needle)) === 0;
     }
 
     private static function GetLastJsonError(): string
