@@ -1,10 +1,38 @@
 # [[ Tiny MVC ]]
 
+
+
 ## Description
 
-It's a light weight MVC implementation in **PHP**.
+It's a light weight **MVC** implementation in **PHP**.
 
-I created this for my students, first step to learn **MVC** before to use Symfony.
+I created this for my students, first step to learn MVC before to use **Symfony**.
+
+
+
+## Installation
+
+```sh
+composer require ludonkey/tinymvc:@dev
+```
+
+
+
+## Demo
+
+
+
+Live: https://sharecode-tinymvc.herokuapp.com/
+
+Source Code: https://github.com/ludonkey/php-project-ludonkey/tree/v10
+
+
+
+Live: https://miniproject-template.herokuapp.com/
+
+Source Code: https://github.com/ludonkey/miniproject-template
+
+
 
 ## Getting Started
 

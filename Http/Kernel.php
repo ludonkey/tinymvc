@@ -84,6 +84,7 @@ class Kernel
             $controllerClass = $route->controller;
             $controllerMethod = $route->function;
             $controller = new $controllerClass();
+            $this->globalVariables["app_session"] = $request->getSession();
             $controller->setGlobalVariables($this->globalVariables);
             $response = $controller->$controllerMethod($request);
         } else {
